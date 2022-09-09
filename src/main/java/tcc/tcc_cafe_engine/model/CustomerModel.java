@@ -1,10 +1,14 @@
 package tcc.tcc_cafe_engine.model;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Value
-@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class CustomerModel {
     String name;
     String email;
