@@ -1,11 +1,11 @@
 package tcc.tcc_cafe_engine.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import tcc.tcc_cafe_engine.handler.CafeRulesHandler;
 import tcc.tcc_cafe_engine.model.CustomerModel;
+
+import java.io.IOException;
 
 @RestController
 public class CafeController {
@@ -14,7 +14,7 @@ public class CafeController {
 
     @RequestMapping(value = {"/cafe"}, method = RequestMethod.POST, consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void transactionalDataRetriever(@RequestBody CustomerModel customer) {
+    public void transactionalDataRetriever(@RequestBody CustomerModel customer) throws IOException {
         handler.cafeEngineHandler(customer);
     }
 }
