@@ -17,4 +17,6 @@ public class CustomerModel {
     Address address;
     Integer age;
     Double transactionValue;
+    String sentMethod;
+    String transactionMessage;
 }
