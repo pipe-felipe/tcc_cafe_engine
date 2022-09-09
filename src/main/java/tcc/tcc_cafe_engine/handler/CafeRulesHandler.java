@@ -3,20 +3,20 @@ package tcc.tcc_cafe_engine.handler;
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import tcc.tcc_cafe_engine.model.CustomerModel;
 import tcc.tcc_cafe_engine.model.dto.CafeDTO;
-import tcc.tcc_cafe_engine.rules.email.EmailRulesHandler;
-import org.apache.http.client.methods.HttpPost;
+import tcc.tcc_cafe_engine.rules.email.EmailRulesDefinition;
 
 import java.io.IOException;
 
 
 public class CafeRulesHandler {
 
-    private CafeDTO DTOHandler(CustomerModel customer){
+    private CafeDTO createDTO(CustomerModel customer) {
         var dto = new CafeDTO();
 
         dto.setName(customer.getName());
@@ -30,19 +30,28 @@ public class CafeRulesHandler {
         return dto;
     }
 
-    public void cafeEngineHandler(CustomerModel customer) throws IOException {
+    private CafeDTO executeRules(CustomerModel customer) {
+        var dto = this.createDTO(customer);
+        var mapResult = EmailRulesDefinition.reproveByEmail(customer);
+        dto.setTransactionStatus(mapResult.get("status"));
+        dto.setTransactionMessage(mapResult.get("message"));
+        return dto;
+    }
 
-        var dto = this.DTOHandler(customer);
-
-        dto.setTransactionStatus(EmailRulesHandler.reproveByEmail(customer).toString());
-
+    private StringEntity createJsonStringEntity(CustomerModel customer) {
+        var dto = this.executeRules(customer);
         var gson = new Gson();
         var jsonRequest = gson.toJson(dto);
 
-        var entity = new StringEntity(
+        return new StringEntity(
                 jsonRequest,
                 ContentType.APPLICATION_JSON
         );
+    }
+
+    public void sendTransactionalData(CustomerModel customer) throws IOException {
+
+        StringEntity entity = this.createJsonStringEntity(customer);
 
         HttpClient httpCLient = HttpClientBuilder.create().build();
         var request = new HttpPost("http://localhost:8080/customer/engine");

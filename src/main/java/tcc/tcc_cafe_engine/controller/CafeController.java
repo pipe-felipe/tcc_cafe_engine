@@ -15,6 +15,6 @@ public class CafeController {
     @RequestMapping(value = {"/cafe"}, method = RequestMethod.POST, consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public void transactionalDataRetriever(@RequestBody CustomerModel customer) throws IOException {
-        handler.cafeEngineHandler(customer);
+        handler.sendTransactionalData(customer);
     }
 }
