@@ -18,4 +18,5 @@ public class CafeDTO {
     Integer age;
     Double transactionValue;
     String transactionStatus;
+    String sentMethod;
 }

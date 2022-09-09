@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class CafeRulesHandler {
 
-    public void cafeEngineHandler(CustomerModel customer) throws IOException {
+    private CafeDTO DTOHandler(CustomerModel customer){
         var dto = new CafeDTO();
 
         dto.setName(customer.getName());
@@ -26,6 +26,13 @@ public class CafeRulesHandler {
         dto.setAddress(customer.getAddress());
         dto.setAge(customer.getAge());
         dto.setTransactionValue(customer.getTransactionValue());
+
+        return dto;
+    }
+
+    public void cafeEngineHandler(CustomerModel customer) throws IOException {
+
+        var dto = this.DTOHandler(customer);
 
         dto.setTransactionStatus(EmailRulesHandler.reproveByEmail(customer).toString());
 
