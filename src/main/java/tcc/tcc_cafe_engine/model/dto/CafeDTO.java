@@ -15,6 +15,7 @@ public class CafeDTO {
     String document;
     CreditCard creditCard;
     Address address;
+    String birthDate;
     Integer age;
     Double transactionValue;
     String transactionStatus;
