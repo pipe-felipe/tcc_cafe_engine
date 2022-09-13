@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -12,6 +13,7 @@ import tcc.tcc_cafe_engine.model.dto.CafeDTO;
 import tcc.tcc_cafe_engine.rules.email.EmailRulesDefinition;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class CafeRulesHandler {
@@ -24,6 +26,7 @@ public class CafeRulesHandler {
         dto.setDocument(customer.getDocument());
         dto.setCreditCard(customer.getCreditCard());
         dto.setAddress(customer.getAddress());
+        dto.setBirthDate(customer.getBirthDate());
         dto.setAge(customer.getAge());
         dto.setTransactionValue(customer.getTransactionValue());
 
@@ -52,13 +55,22 @@ public class CafeRulesHandler {
     public void sendTransactionalData(CustomerModel customer) throws IOException {
 
         StringEntity entity = this.createJsonStringEntity(customer);
-
         HttpClient httpCLient = HttpClientBuilder.create().build();
-        var request = new HttpPost("http://localhost:8080/customer/engine");
-        request.setEntity(entity);
 
-        HttpResponse response = httpCLient.execute(request);
-        System.out.println(response.getStatusLine().getStatusCode());
-        response.setEntity(entity);
+        if (Objects.equals(customer.getSentMethod(), "POST")) {
+            var request = new HttpPost("http://localhost:8080/customer/engine");
+            request.setEntity(entity);
+            HttpResponse response = httpCLient.execute(request);
+            System.out.println(response.getStatusLine().getStatusCode());
+            response.setEntity(entity);
+        } else {
+            String url = "http://localhost:8080/customer/cafe/" + customer.getDocument();
+            System.out.println(url);
+            var request = new HttpPut(url);
+            request.setEntity(entity);
+            HttpResponse response = httpCLient.execute(request);
+            System.out.println(response.getStatusLine().getStatusCode());
+            response.setEntity(entity);
+        }
     }
 }
