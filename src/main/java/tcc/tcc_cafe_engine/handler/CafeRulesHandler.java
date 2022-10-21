@@ -35,7 +35,7 @@ public class CafeRulesHandler {
 
     private CafeDTO executeRules(CustomerModel customer) {
         var dto = this.createDTO(customer);
-        var mapResult = EmailRulesDefinition.reproveByEmail(customer);
+        var mapResult = EmailRulesDefinition.randomRuleForTest(customer);
         dto.setTransactionStatus(mapResult.get("status"));
         dto.setTransactionMessage(mapResult.get("message"));
         return dto;
